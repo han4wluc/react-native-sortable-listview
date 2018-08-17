@@ -355,6 +355,7 @@ class SortableListView extends React.Component {
   }
 
   checkTargetElement = () => {
+    if(!this.mounted){ return; }
     const itemHeight = this.state.active.layout.frameHeight
     const SLOP = this.direction === 'down' ? itemHeight : 0
     const scrollValue = this.scrollValue
@@ -468,9 +469,10 @@ class SortableListView extends React.Component {
   }
 
   componentDidMount() {
-    InteractionManager.runAfterInteractions(() => {
+    // InteractionManager.runAfterInteractions(() => {
       this.timer = setTimeout(() => this && this.measureWrapper(), 0)
-    })
+    // })
+    this.mounted = true;
   }
 
   componentWillReceiveProps(props) {
@@ -480,6 +482,7 @@ class SortableListView extends React.Component {
   componentWillUnmount() {
     this.timer && clearTimeout(this.timer)
     this.state.pan.removeListener(this.listener)
+    this.mounted = false;
   }
 
   setOrder = props => {
